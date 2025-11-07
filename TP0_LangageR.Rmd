@@ -1,0 +1,425 @@
+---
+title: "Séance de travaux pratiques TP0"
+output:
+  html_document: default
+  html_notebook: default
+---
+
+------------------------------------------------------------------------
+
+#### [Introduction à R](https://cran.r-project.org/doc/manuals/r-release/R-intro.pdf)
+
+-   Liste des [fonctions de base](https://stat.ethz.ch/R-manual/R-devel/library/base/html/00Index.html).
+
+-   Introduction à la programmation en R [Vincent Goulet](https://cran.r-project.org/doc/contrib/Goulet_introduction_programmation_R.pdf)
+
+-   R pour les débutants [Emmanuel Paradis](https://cran.r-project.org/doc/contrib/Paradis-rdebuts_fr.pdf)
+
+-   [Introduction à R](https://cran.r-project.org/doc/manuals/r-release/R-intro.pdf)
+
+------------------------------------------------------------------------
+
+**IMPORTANT** : Cet énoncé est un document de travail interactif personnel **qui ne doit pas être rendu**. Il est destiné à l'apprentissage de commandes en `R`. Il est fortement conseillé **de faire ce TP** pour se familiariser avec l'environnement de programmation et gagner du temps par la suite. Sa durée estimée de rélaisation est d'environ 1h30.
+
+------------------------------------------------------------------------
+
+#### Objectif
+
+L'objectif de cette séance de travaux pratiques et de manipuler les objets de base du langage R, vecteurs, matrices, listes, fonctions, et d'effecter des analyses simples à partir de données simulées et de données réelles.
+
+Deux types d'actions sont proposées : 1) compléter certains codes en utilisant l'aide en ligne du programme avec la commande `help()`, ou une recherche externe, 2) comprendre et commenter d'autres codes déjà écrits.
+
+### Vecteurs, matrices, listes et fonctions
+
+#### Création de vecteurs
+
+Pour créer des vecteurs en R, on peut utiliser les fonctions `c()`, `seq()`, `rep()`, `sample()` ou bien d'autres. Nous étudions quelques exemples portant la manipulation de vecteurs en R.
+
+-   Utiliser la fonction `c()` pour definir des vecteurs. Commenter et compléter les codes suivants.
+
+```{r}
+# comment 1
+  x <- c("chat","chien", 0) #0 est automatiquement converti en 'character'
+  x
+# calcule la longueur du vecteur x
+  change_moi(x)
+```
+
+```{r}
+  # comment 2
+  x <- c(1, 6, 7, 2)
+  x
+
+  # comment 3  
+  cat("x est il 'numeric' ? ", is.numeric(x), "\n")
+  
+  # calcule la somme des éléments de x
+  trouve_moi(x)
+```
+
+-   Pour un vecteur d'entiers consécutifs, on peut utiliser la syntaxe `:`. Notons que `seq` permet de définir des séquences arbitraires. Commenter et compléter le code suivant.
+
+```{r}
+  # comment 1
+  x <- 1:10
+  x
+
+  # définit une suite allant de 1 a 10 avec un pas de 0.1  
+  help(seq)
+  x <- seq(complete_moi)
+  x
+```
+
+-   La fonction `rep()` peut être utilisée pour définir des motifs répétés. Commenter et compléter le code suivant.
+
+```{r}
+  # comment 1
+  help(rep)
+  x <- rep(1:2, each = 3)
+  x
+  
+  # crée la séquence 1 2 1 2 1 2 
+  x <- rep(change_moi)
+  x
+```
+
+-   La fonction `sample()` peut être utilisée pour effectuer un tirage dans une urne avec ou sans replacement. Commenter et compléter le code suivant.
+
+```{r}
+  # Effectuer 100 tirages dans une urne contenant deux 'boules' bleues 
+  # et une boule orange 
+  help(sample)
+  urne <- c("blue", "blue", "orange")
+  x <- sample(urne, remplace_moi)
+
+  # comment 1
+  help(table)
+  table(x)
+```
+
+-   La fonction `sample()` peut être utilisée pour échantillonner (ou simuler) une loi discrete à support fini. On souhaite effectuer $n$ tirages de la loi définie par proportionalité de la manière suivante
+
+$$
+ p(x = i) \propto \frac1i , \quad  \forall i = 1, \dots, 8.
+$$
+
+Commenter et compléter le code suivant.
+
+```{r}
+  n = 10000
+  # comment 1
+  x <- sample(1:8, n, complete_moi)
+
+  # comment 2
+  round(table(x)/n, 2)
+  
+  # Arrondi à deux  décimales près des valeurs de probabilités 
+  # de la loi théorique definie plus haut
+  cte_normalisation <- calcule_moi
+  round(1/(1:8)/cte_normalisation, 2)
+  
+  # comment 4
+  df <- data.frame(round(table(x)/n, 2), 
+                   round(1/(1:8)/cte_normalisation, 2))
+  
+  colnames(df) = c("x","sample", "theorie")
+   
+  df
+```
+
+-   Calculer la valeur moyenne de l'échantillon et l'espérance de la loi théorique
+
+```{r}
+# valeur moyenne de x
+ici_la_reponse_attendue
+
+# espérance de la loi = sum(i*p(x=i))
+un_petit_calcul_simplifie_la_reponse
+```
+
+-   Une particularité très intéressante en R et de pouvoir représenter une condition par un vecteur logique (`logical`). Dans le vecteur `x` généré par le code précédent, on cherche à compter le nombre de 1 présents dans ce vecteur, puis le nombre de valeurs différentes de 1 dans ce vecteur. Commenter et compléter le code suivant.
+
+```{r}
+  # comment 1
+  boo <- (x == 1)
+  class(boo)
+  
+  # compte le nombre de 1 dans le vecteur x
+  sum(change_moi)
+  
+  # compte le nombre de valeurs differentes de 1 dans le vecteur x 
+  # la négation s'exprime par "!="
+  trouve_moi
+```
+
+Voici un exemple de ce qu'il ne faut pas faire en R, bien que cela soit parfaitement correct d'un point de vue de la programmation.
+
+```{r}
+   # compte le nombre de 1 dans le vecteur x
+   compte_les_un <- function(x){
+     
+     if (!is.numeric(x)) {stop("x must be numeric.")}
+     
+     n <- length(x)
+     
+     resultat <- 0
+     
+     for (i in 1:n){
+       
+       if (x[i] == 1) {
+         resultat <- resultat + 1 
+       }
+     }
+     
+     return(resultat)
+   } 
+
+
+ # Applique la fonction compte_les_un à x
+  compte_les_un(x)
+```
+
+-   Evaluer le temps utilisateur correspondant à l'utilisation de la fonction `compte_les_un`. Evaluer celui de la fonction `sum`. Prendre pour exemple un cent millions de valeurs binaires tirées au hasard. Conclure.
+
+```{r}
+bernoulli <- rbinom(100000000, size = 1, prob = c(0.5,0.5))
+system.time(compte_les_un(bernoulli))
+```
+
+```{r}
+system.time(sum(bernoulli == 1))
+```
+
+```{r}
+system.time(sum(bernoulli))
+```
+
+-   Pour toute valeur $i$ allant de 1 à 8, calculer le nombre d'apparition de $i$ dans le vecteur `x` (défini plus haut). Commenter et compléter le code suivant
+
+```{r}
+  # On applique une fonction comptant le nombre d'apparition à chaque élément de x
+  # help(sapply)
+  tab <-  sapply(1:8, FUN = function(i){ change_moi })
+
+  # comment 1 
+  names(tab) <- 1:8
+  tab
+```
+
+-   On considère la suite finie $x_i = \sin(i)$, $i = 1,\dots,n = 123$. Combien de termes de cette suite sont plus grands que 1/2. Répondre en deux lignes de codes.
+
+```{r}
+  # comment 1 : Ultimate Question of Life
+  help(sin)
+  trouve_la_ligne_1
+  trouve_la_ligne_2
+```
+
+-   On effectue un million de tirages de valeurs entre 1 et 12 de sorte que la probabilité de chaque valeur $i$ est proportionnelle à $1/i$. Calculer la probabilité empirique (expérimentale) d'obtenir un nombre pair. Commenter et compléter le code suivant
+
+```{r}
+  # comment 1
+  x <- sample(1:12, 1000000, complete_moi)
+
+  # comment 2
+  # Le reste de la division par 2 ("modulo 2") s'écrit "%% 2"
+  mean( condition_logique )
+```
+
+-   Calculer la probabilité théorique pour qu'un tirage soit un nombre pair.
+
+```{r}
+  # comment 1
+  quatre_lignes_de_code_au_max
+```
+
+-   A combien de décimales près la valeur empirique est elle proche de la valeur théorique (utiliser `round`).
+
+```{r}
+  # comment 1
+  trois_lignes_de_code_au_max
+```
+
+##### Création de matrices
+
+Pour créer des matrices en R, on peut utiliser les fonctions `matrix()`, `as.matrix()` ou `data.matrix()`. Les matrices sont en fait des vecteurs dont on précise le mode de lecture. Nous étudions quelques exemples portant la manipulation de matrices en R.
+
+-   Créer une matrice `m` ayant 3 lignes et 4 colonnes telle que la première ligne ne contient que des 1, la deuxième ne contient que des 2 et la troisième ne contient que des 3. Commenter et compléter le code suivant
+
+```{r}
+  # comment 1
+  x <- rep(1:3, 4)
+  x
+  
+  # comment 2
+  help(matrix)
+  m <- matrix(x, nrow = 3, byrow = complete_moi)
+  m
+```
+
+-   Remplacer toutes les valeurs égales à 2 par des 4. Commenter et compléter le code suivant
+
+```{r}
+  # comment 1
+  m[ m ==  2 ] <- change_me
+  m
+```
+
+-   Lire les données **BreastCancer** de la bibliothèque `mlbench` (à installer) et les convertir en matrice. Les données représentent des mesures effectuées sur des tumeurs du sein chez 699 patients. Les mesures sont associées aux diagnostics "benign" (bénin) ou "malignant" (grave). Exécuter le code suivant.
+
+```{r}
+  #install.packages("mlbench")
+  library('mlbench')
+  help(BreastCancer)
+
+  # charge les données en mémoire et visualise les premières lignes
+  data(BreastCancer)
+  head(BreastCancer)
+
+  # crée une matrice à partir du tableau de données "BreastCancer"
+  mat_bc <- data.matrix(BreastCancer)
+```
+
+-   À l'aide des commandes `anyNA` ou `is.na`, tester l'existence de valeur manquantes dans la matrice `mat_bc`.
+
+```{r}
+  # teste l'existence de valeur manquantes dans mat_bc
+  help(anyNA)
+  complete_le_code
+```
+
+-   Calculer la valeur moyenne de la variable **Cell.size** pour les patientes. Combien de patientes ont une valeur \> 5 ? Combien de ces patientes ont des diagnostics "malignant" ?
+
+```{r}
+  # comment 1 : moyenne de la variable "Cell.Size"
+  calcule_mean_cell.size_toi_meme
+
+  # comment 2 : Combien de patientes ont une valeur > 5
+  condition <-  mat_bc[,"Cell.size"] >  5
+  donne_la_reponse
+```
+
+-   visualisation
+
+```{r}
+  plot(BreastCancer$Class[condition], col = c("orange", "black"))
+```
+
+-   Quelle est la probabilité qu'une patiente avec une valeur `Cell.size` \> 5 ait un diagnostic "malignant" ?
+
+```{r}
+  # comment 3 : proportion de telles patientes ayant un diagnostic "malignant" ?
+  mean(trouve_ce_qui_faut_ecrire_ici)
+```
+
+-   Afficher la loi empirique (histogramme) de la variable "Cell.size"
+
+```{r}
+  plot(table(quelque_chose)/nrow(mat_bc), lwd = 4, col = "green4", ylab = "frequence")
+```
+
+-   On souhaite établir un test à partir de la variable "Cell.size" afin d'émettre un diagnostic `benign` ou `malignant`. Pour un seuil donné, on dira qu'un test est **positif** si **"Cell.size" \> seuil**. On dira qu'un test positif est un **faux positif** si le diagnostic est "benign".
+
+-   Décrire la probabilité qu'un test soit un **faux positif** et la probabilité la probabilité qu'un test soit un **vrai positif** comme des probabilités conditionnelles. Calculer ces probabilités pour un seuil égal à 5.
+
+```{r}
+  # comment 1: definition du test 
+    positif =  definit_moi_booleen
+
+  # comment 2: calcul des probabilités 
+    taux_faux_positif = mean(complete_la)
+    cat("taux de faux positifs: ", taux_faux_positif ,"\n")
+    
+    taux_vrai_positif = mean(mean(complete_ici))
+    cat("taux de vrais positifs: ",  taux_vrai_positif,"\n")
+
+```
+
+-   Représenter graphiquement le taux de vrais positifs en fonction du taux de faux positifs, pour toutes les valeurs de seuil comprises entre 0 et 11.
+
+```{r}
+  # 
+  theta = seq(0, 11)
+  
+  res = NULL
+  
+  for (seuil in theta) {
+    positif =  remplace_moi > seuil 
+    res = rbind(res, c( taux_de_faux_positif_a_definir,
+           taux_de_vrai_positif_a_definir))
+  }
+                
+  plot(res, 
+       lwd = 4, type = "l",
+       col = "darkblue",
+       xlab ="TFP", ylab = "TVP", main = "ROC")
+   points(res, 
+       pch = 19,
+       col = "darkblue")
+  abline(0,1)
+```
+
+##### Création de listes
+
+Les listes font parties des types de données les plus fréquemment rencontrés en R. Une liste peut comporter une suite d'objets quelconques que l'on peut éventuellement nommer.
+
+Pour créer une liste, on peut utiliser la fonction `list()`. Les arguments listés sont accessibles par leurs noms précédés d'un symbole dollar ou par un double crochet.
+
+-   On souhaite constituer une liste de longueur 2 contenant des vecteurs nommés "cell_size" et "mitoses". Commenter et compléter le code suivant.
+
+```{r}
+  # comment 1
+  x1 <- rlnorm(100, mean = 3, sd = 1.7)
+  x2 <- sample(1:20, 100, rep = TRUE) 
+  
+  # comment 2
+  my_data <- list(cell_size = x1, change_moi)
+  summary(my_data)
+```
+
+-   Utiliser la commande `summary` pour donner un résumé de la variable `mitose`
+
+```{r}
+  # comment 1
+
+  summary( change_me$mitoses )
+  summary( change_me$mit ) # ce n'est pas recommandé
+  summary( change_me[[2]])
+```
+
+-   Lorsque les arguments sont des vecteurs de même longueur, vérifier que l'on peut créer une liste sous le format "data.frame" (tableau de données). Dans ce cas, il est possible d'appliquer des fonctions spécificiques à l'analyse des tableaux de données.
+
+```{r}
+  df <- data.frame(cell_size = round(x1, 2), mitoses = x2)
+  help(head)
+  head(df, n = 10)
+```
+
+##### Création de fonctions
+
+Une fonction est une partie de code recevant une ou plusieurs informations à partir desquelles elle retourne un résultat. Bien que nous utiliserons le plus souvent les fonctions des bibliothèques de base ou de bibliothèques installées, il est utile de pouvoir en construire soi-même.
+
+-   Créer une fonction `f(x)` prenant en entrée un vecteur numérique et retournant une liste contenant la moyenne et l'écart type de `x` (fonctions `mean`, `sd`). Commenter et compléter le code suivant.
+
+```{r}
+f <-function(x){
+  # description  
+  
+  # comment 1
+  if (!is.numeric(x)) stop("x must be numeric. \n")
+  
+  # comment 2
+  object <- list( complete_moi )
+  return(object)
+}
+```
+
+-   Appliquer la fonction `f(x)` à un vecteur contenant $n = 10000$ valeurs tirées selon la loi de Poisson$(\lambda = 2)$.
+
+```{r}
+ # comment 1
+ help("rpois")
+
+ x <- change_moi
+ f(x)
+```
