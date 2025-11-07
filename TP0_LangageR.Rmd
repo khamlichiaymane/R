@@ -42,7 +42,7 @@ Pour créer des vecteurs en R, on peut utiliser les fonctions `c()`, `seq()`, `r
   x <- c("chat","chien", 0) #0 est automatiquement converti en 'character'
   x
 # calcule la longueur du vecteur x
-  change_moi(x)
+  length(x)
 ```
 
 ```{r}
@@ -54,7 +54,7 @@ Pour créer des vecteurs en R, on peut utiliser les fonctions `c()`, `seq()`, `r
   cat("x est il 'numeric' ? ", is.numeric(x), "\n")
   
   # calcule la somme des éléments de x
-  trouve_moi(x)
+  sum(x)
 ```
 
 -   Pour un vecteur d'entiers consécutifs, on peut utiliser la syntaxe `:`. Notons que `seq` permet de définir des séquences arbitraires. Commenter et compléter le code suivant.
@@ -66,7 +66,7 @@ Pour créer des vecteurs en R, on peut utiliser les fonctions `c()`, `seq()`, `r
 
   # définit une suite allant de 1 a 10 avec un pas de 0.1  
   help(seq)
-  x <- seq(complete_moi)
+  x <- seq(10)
   x
 ```
 
@@ -79,7 +79,7 @@ Pour créer des vecteurs en R, on peut utiliser les fonctions `c()`, `seq()`, `r
   x
   
   # crée la séquence 1 2 1 2 1 2 
-  x <- rep(change_moi)
+  x <- rep(c(1,2), times = 3)
   x
 ```
 
@@ -90,7 +90,7 @@ Pour créer des vecteurs en R, on peut utiliser les fonctions `c()`, `seq()`, `r
   # et une boule orange 
   help(sample)
   urne <- c("blue", "blue", "orange")
-  x <- sample(urne, remplace_moi)
+  x <- sample(urne, 100, replace = TRUE)
 
   # comment 1
   help(table)
@@ -108,15 +108,17 @@ Commenter et compléter le code suivant.
 ```{r}
   n = 10000
   # comment 1
-  x <- sample(1:8, n, complete_moi)
+  p <- 1/ (1:8)
+  cte_normalisation <- sum(p)
+  p <- p/cte_normalisation
+  x <- sample(1:8, n, replace = TRUE, p)
 
   # comment 2
   round(table(x)/n, 2)
   
   # Arrondi à deux  décimales près des valeurs de probabilités 
   # de la loi théorique definie plus haut
-  cte_normalisation <- calcule_moi
-  round(1/(1:8)/cte_normalisation, 2)
+  round(p, 2)
   
   # comment 4
   df <- data.frame(round(table(x)/n, 2), 
@@ -131,10 +133,10 @@ Commenter et compléter le code suivant.
 
 ```{r}
 # valeur moyenne de x
-ici_la_reponse_attendue
+mean(x)
 
 # espérance de la loi = sum(i*p(x=i))
-un_petit_calcul_simplifie_la_reponse
+sum(1:8*p)
 ```
 
 -   Une particularité très intéressante en R et de pouvoir représenter une condition par un vecteur logique (`logical`). Dans le vecteur `x` généré par le code précédent, on cherche à compter le nombre de 1 présents dans ce vecteur, puis le nombre de valeurs différentes de 1 dans ce vecteur. Commenter et compléter le code suivant.

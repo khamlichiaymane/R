@@ -1,0 +1,39 @@
+---
+title: "RPractice"
+output: html_document
+date: "2025-11-07"
+---
+
+```{r}
+# c, length, sum, rep
+
+x <- c("chat","chien", 0)
+is.numeric(x)
+x <- 1:3
+is.numeric(x)
+mean(x)
+var(x)
+rep(1:2, times = 3)
+
+```
+
+Une urne :
+
+```{r}
+# une urne
+x <- c("blue", "yellow","red","green")
+p <- 1/(1:4)
+p <- p/sum(p) #normalisation
+# p <- round(p, 1)
+p
+table(sample(x, 100, replace = TRUE, p))
+```
+
+Une loi discrète :
+
+```{r}
+p <- 1/1:8/sum(1/1:8)
+x <- sample(1:8, 1000, replace = TRUE, p)
+mean(x)
+sum(1:8 *p)
+```
